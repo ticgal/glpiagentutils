@@ -49,14 +49,11 @@ Alternatively, you can run this one-liner:
 ### [glpi-agent-updater.sh](#glpi-agent-updater.sh)
 
 A quick GLPI Agent updater script 
-
-It relies on the GLPI Agent AppImage version and the [glpi-agent-portable.sh](https://github.com/glpi-project/glpi-agent/blob/develop/contrib/unix/glpi-agent-portable.sh) generator script
-
-Currently, it runs and saves a local inventory to /tmp
+It relies on the `glpi-agent-linux-installer.pl` to perform the update.
 
 #### Supported OS
 
-**glpi-agent-updater.sh** works with any operating system supporting Flatpak and the GLPI Agent. 
+**`glpi-agent-updater.sh`** works with any operating system supported by the the `glpi-agent-linux-installer.pl `
 
 It has been tested on:
 
