@@ -31,6 +31,20 @@
 #
 #!/bin/bash
 
+# Help parameter
+if [[ "$1" == "--help" ]]; then
+  # Display the help message and exit
+  echo "Usage:" 
+  echo "  $0 [options]"
+  echo ""
+  echo "Options:"
+  echo "  --help  		Display this help message"
+  echo ""
+  echo "Default parameters:"
+  echo "  --reinstall --no-question --silent --runnow"
+  exit 0
+fi
+
 # Check if necessary commands exist
 for cmd in curl jq wget chmod; do
   if ! command -v $cmd &> /dev/null; then
