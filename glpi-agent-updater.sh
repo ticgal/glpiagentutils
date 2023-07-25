@@ -105,8 +105,7 @@ if [[ "$INSTALLED_GA_VERSION" != "$LATEST_GA_VERSION" ]]; then
   # Download the unix installer
   echo "Downloading Installer from $INSTALLER_FILE"
   curl -sS -L -O "$INSTALLER_FILE"
-  perl glpi-agent-"$LATEST_GA_VERSION"-linux-installer.pl --reinstall --no-question --silent --type="$ga_available_tasks" --runnow
-
+  perl glpi-agent-"$LATEST_GA_VERSION"-linux-installer.pl --reinstall --no-question --silent --type="$ga_available_tasks" --runnow "$@"
 
   # Command to get the currently installed GLPI agent version, adjust it based on your output format
   GA_VERSION=$(glpi-agent --version)
@@ -134,7 +133,5 @@ if [[ "$INSTALLED_GA_VERSION" != "$LATEST_GA_VERSION" ]]; then
   cd - || exit
   
 else
-
   echo "No update needed: Installed GLPI agent version $INSTALLED_GA_VERSION is up to date."
-
 fi
