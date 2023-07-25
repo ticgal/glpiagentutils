@@ -32,7 +32,7 @@
 #!/bin/bash
 
 # Check if necessary commands exist
-for cmd in curl jq wget chmod xxx; do
+for cmd in curl jq wget chmod; do
   if ! command -v $cmd &> /dev/null; then
     echo "Error: $cmd is not installed."
     exit 1
@@ -78,18 +78,25 @@ if [[ "$INSTALLED_GA_VERSION" != "$LATEST_GA_VERSION" ]]; then
     echo "No configuration is found. Cannot update the agent."
     exit
   fi
+
+  # Save current installed packages
+  ga_installed_tasks=$(sudo glpi-agent --list-tasks) > /dev/null
+  ga_available_tasks=$(echo "$ga_installed_tasks" | grep -oE '^[[:space:]]*-[[:space:]]+[^(]+' | awk -F ' ' '{print $2}' | paste -sd "," -)
+
+  echo "Installed tasks: $ga_available_tasks"
+
   # URL for the unix installer
   INSTALLER_FILE="https://github.com/glpi-project/glpi-agent/releases/download/$LATEST_GA_VERSION/glpi-agent-$LATEST_GA_VERSION-linux-installer.pl"
 
   # Download the unix installer
   echo "Downloading Installer from $INSTALLER_FILE"
   curl -sS -L -O "$INSTALLER_FILE"
-  perl glpi-agent-"$LATEST_GA_VERSION"-linux-installer.pl --reinstall --no-question --silent --cron
-  # perl glpi-agent-$LATEST_GA_VERSION-linux-installer.pl --silent --no-question --runnow --reinstall
+  perl glpi-agent-"$LATEST_GA_VERSION"-linux-installer.pl --reinstall --no-question --silent --type="$ga_available_tasks" --runnow
+
 
   # Command to get the currently installed GLPI agent version, adjust it based on your output format
-  output=$(glpi-agent --version)
-  INSTALLED_GA_LINUX_VERSION=$(echo "$output" | grep -oP 'GLPI Agent \(\K[0-9.-]+')
+  GA_VERSION=$(glpi-agent --version)
+  INSTALLED_GA_LINUX_VERSION=$(echo "$GA_VERSION" | grep -oP 'GLPI Agent \(\K[0-9.-]+')
   INSTALLED_GA_VERSION=$(echo "$INSTALLED_GA_LINUX_VERSION" | cut -d'-' -f1)
 
   # Compare the versions
