@@ -82,7 +82,7 @@ All the installations are silent by default. If you want them lengthy, use the o
 
 Alternatively, you can run this one-liner:
 
-`curl -s https://raw.githubusercontent.com/ticgal/glpiagentutils/develop/glpi-agent-wrapper.sh | sudo bash --install --server="https://yourserver.tld/" [add any other parameters needed]`
+`curl -s https://raw.githubusercontent.com/ticgal/glpiagentutils/develop/glpi-agent-wrapper.sh | sudo bash /dev/stdin --install --server="https://yourserver.tld/" [add any other parameters needed]`
 
 #### --update
 This is a helpful parameter since the official script won't update the agent, preserving the parameters nor the installed modules.
@@ -98,7 +98,11 @@ Running the agent with the `--update´ parameter will:
 - Run the agent
 
 A convenient one-liner:
-`curl -s https://raw.githubusercontent.com/ticgal/glpiagentutils/develop/glpi-agent-wrapper.sh | sudo bash --update`
+`curl -s https://raw.githubusercontent.com/ticgal/glpiagentutils/develop/glpi-agent-wrapper.sh | sudo bash /dev/stdin --update`
 
 #### --help
 Self-explanatory :)
+
+# Contribute
+PR, suggestions, or improvements are always welcome.
+Open an Issue and send a PR to be reviewed.
