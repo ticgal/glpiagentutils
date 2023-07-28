@@ -20,8 +20,8 @@
 #
 # ------------------------------------------------------------------------
 #
-# @script    glpi-agent-updater.sh
-# @version   0.2.0
+# @script    glpi-agent-wrapper.sh
+# @version   0.3.0
 # @author    TICGAL
 # @copyright Copyright (c) 2023 TICGAL
 # @license   AGPL License 3.0 or any later version
