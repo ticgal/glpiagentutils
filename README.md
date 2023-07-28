@@ -6,7 +6,7 @@
 
 ## Disclaimer
 You can use them at your own risk.
-If you need professional support, please get in touch with us.
+If you need professional support, please don't hesitate to get in touch with us.
 
 ## What are GLPI Agent Utils?
 
@@ -24,7 +24,7 @@ For more information about the GLPI Agent, please visit this [link](https://gith
 
 This script lets you start a local inventory process without installing any agents.
 
-It relies on the GLPI Agent AppImage version and the [glpi-agent-portable.sh](https://github.com/glpi-project/glpi-agent/blob/develop/contrib/unix/glpi-agent-portable.sh) generator script
+It relies on the GLPI Agent AppImage version and the [glpi-agent-portable.sh](https://github.com/glpi-project/glpi-agent/blob/master/contrib/unix/glpi-agent-portable.sh) generator script
 
 Currently, it runs and saves a local inventory to /tmp
 
@@ -82,7 +82,7 @@ All the installations are silent by default. If you want them lengthy, use the o
 
 Alternatively, you can run this one-liner:
 
-`curl -s https://raw.githubusercontent.com/ticgal/glpiagentutils/develop/glpi-agent-wrapper.sh | sudo bash /dev/stdin --install --server="https://yourserver.tld/" [add any other parameters needed]`
+`curl -s https://raw.githubusercontent.com/ticgal/glpiagentutils/master/glpi-agent-wrapper.sh | sudo bash /dev/stdin --install --server="https://yourserver.tld/" [add any other parameters needed]`
 
 #### --update
 This is a helpful parameter since the official script won't update the agent, preserving the parameters nor the installed modules.
@@ -98,11 +98,10 @@ Running the agent with the `--update´ parameter will:
 - Run the agent
 
 A convenient one-liner:
-`curl -s https://raw.githubusercontent.com/ticgal/glpiagentutils/develop/glpi-agent-wrapper.sh | sudo bash /dev/stdin --update`
+`curl -s https://raw.githubusercontent.com/ticgal/glpiagentutils/master/glpi-agent-wrapper.sh | sudo bash /dev/stdin --update`
 
 #### --help
 Self-explanatory :)
 
 # Contribute
-PR, suggestions, or improvements are always welcome.
-Open an Issue and send a PR to be reviewed.
+PR, suggestions, or improvements are always welcome. Open an Issue and send a PR to be reviewed.
