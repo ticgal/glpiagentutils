@@ -5,8 +5,8 @@
 [![License](https://img.shields.io/badge/License-GNU%20AGPLv3-blue.svg)](https://github.com/ticgal/taskdrop/blob/master/LICENSE)
 
 ## Disclaimer
-Use them at your own risk.
-If you need professional support please contact us.
+You can use them at your own risk.
+If you need professional support, please get in touch with us.
 
 ## What are GLPI Agent Utils?
 
@@ -60,7 +60,7 @@ It relies on the `glpi-agent-linux-installer.pl` to perform the update.
 It has been tested on:
 
 - Ubuntu
-However it should work on any glpi-agent-linux-installer.pl  supported OS
+However, it should work on any glpi-agent-linux-installer.pl  supported OS
 
 #### How to use it
 
@@ -76,18 +76,18 @@ There are three parameters:
 3. --help
 
 #### --install
-It works as a wrapper to the plugin, it just makes the installation passing the parameters to the script. 
+It works as a wrapper to the plugin, making the installation pass the parameters to the script. 
 At least a --server or --local is needed to install and generate an inventory. 
-All the installations are silent by default. If you want them verbose use the official script.
+All the installations are silent by default. If you want them lengthy, use the official script.
 
 Alternatively, you can run this one-liner:
 
 `curl -s https://raw.githubusercontent.com/ticgal/glpiagentutils/develop/glpi-agent-wrapper.sh | sudo bash --install --server="https://yourserver.tld/" [add any other parameters needed]`
 
 #### --update
-This is the really usefull feature, since the official scripts won't update preserving the parameters or installed modules.
+This is a helpful parameter since the official script won't update the agent, preserving the parameters nor the installed modules.
 
-Running the with --update parameter will:
+Running the agent with the `--update´ parameter will:
 
 - Check for the last version of the agent
 - Download it
@@ -97,10 +97,8 @@ Running the with --update parameter will:
 - Retrieve previous settings
 - Run the agent
 
-A conveninient one-liner:
+A convenient one-liner:
 `curl -s https://raw.githubusercontent.com/ticgal/glpiagentutils/develop/glpi-agent-wrapper.sh | sudo bash --update`
 
 #### --help
-Self explanatory :)
-
-
+Self-explanatory :)
