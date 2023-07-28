@@ -32,17 +32,43 @@
 #!/bin/bash
 
 # Help parameter
-if [[ "$1" == "--help" ]]; then
-  # Display the help message and exit
-  echo "Usage:" 
-  echo "  $0 [options]"
+function show_help() {
+  echo "Usage: $0 (--install|--update) [options]"
   echo ""
   echo "Options:"
-  echo "  --help  		Display this help message"
+  echo "  --help       Display this help message"
+  echo "  --install    Install GLPI Agent with necessary parameters"
+  echo "  --update     Reinstall GLPI Agent saving its configuration and tasks"
   echo ""
-  echo "Default parameters:"
-  echo "  --reinstall --no-question --silent --runnow"
+  echo "Note:"
+  echo "  Parameters used are the same as the official glpi-agent-installer."
+}
+
+# Check if --help is provided
+if [[ "$*" == *"--help"* ]]; then
+  show_help
   exit 0
+fi
+
+# Check if both --install and --update are provided together
+if [[ "$*" == *"--install"* && "$*" == *"--update"* ]]; then
+  echo "Error: --install and --update options cannot be used together."
+  show_help
+  exit 1
+fi
+
+# Check if either --install or --update is provided
+if [[ "$*" != *"--install"* && "$*" != *"--update"* ]]; then
+  echo "Error: You must use either --install or --update option."
+  show_help
+  exit 1
+fi
+
+# Check if --install is used without server or local
+if [[ "$*" == *"--install"* && "$*" != *"--server"* && "$*" != *"--local"* ]]; then
+  echo "Error: The --install option requires either --server or --local parameter."
+  show_help
+  exit 1
 fi
 
 # Check if necessary commands exist
@@ -66,47 +92,27 @@ if [ -z "$LATEST_GA_VERSION" ]; then
   exit 1
 fi
 
-# Command to get the currently installed GLPI agent version, adjust it based on your output format
-output=$(glpi-agent --version)
-INSTALLED_GA_LINUX_VERSION=$(echo "$output" | grep -oP 'GLPI Agent \(\K[0-9.-]+')
-INSTALLED_GA_VERSION=$(echo "$INSTALLED_GA_LINUX_VERSION" | cut -d'-' -f1)
+# Create temp directory if not exists
+TEMP_DIR="/tmp/glpi-agent"
+mkdir -p $TEMP_DIR
+cd $TEMP_DIR || exit 1
 
-# Compare the versions
-if [[ "$INSTALLED_GA_VERSION" != "$LATEST_GA_VERSION" ]]; then
-  echo "Update needed: Installed GLPI agent version $INSTALLED_GA_VERSION is different from the latest version $LATEST_GA_VERSION."
-    
-  # Variable for temp directory
-  TEMP_DIR="/tmp/glpi-agent"
+# URL for the unix installer
+INSTALLER_FILE="https://github.com/glpi-project/glpi-agent/releases/download/$LATEST_GA_VERSION/glpi-agent-$LATEST_GA_VERSION-linux-installer.pl"
 
-  # Create temp directory if not exists
-  mkdir -p $TEMP_DIR
+# Download the unix installer
+echo "Downloading Installer from $INSTALLER_FILE"
+curl -sS -L -O "$INSTALLER_FILE"
+
+# If --install is the parameter make an installation with the parameters provided. No configuration is saved.
+if [[ "$*" == *"--install"* ]]; then
+  echo "Installing GLPI Agent $LATEST_GA_VERSION with the parameters $* ..."
+  perl glpi-agent-"$LATEST_GA_VERSION"-linux-installer.pl --no-question --silent --runnow "$@"
+
+# Else if --update keep config and tasks and update the agent
+elif [[ "$*" == *"--update"* ]]; then
+  EXTRA_OPTIONS=("${*#*--update}")
   
-  # Change into temp directory
-  cd $TEMP_DIR
-
-  GA_CONFIG="/etc/glpi-agent/conf.d"
-  # Save current config
-  if [ -d "$GA_CONFIG" ]; then
-    cp $GA_CONFIG/*.cfg .
-  else
-    echo "No configuration is found. Cannot update the agent."
-    exit
-  fi
-
-  # Save current installed packages
-  ga_installed_tasks=$(sudo glpi-agent --list-tasks) > /dev/null
-  ga_available_tasks=$(echo "$ga_installed_tasks" | grep -oE '^[[:space:]]*-[[:space:]]+[^(]+' | awk -F ' ' '{print $2}' | paste -sd "," -)
-
-  echo "Installed tasks: $ga_available_tasks"
-
-  # URL for the unix installer
-  INSTALLER_FILE="https://github.com/glpi-project/glpi-agent/releases/download/$LATEST_GA_VERSION/glpi-agent-$LATEST_GA_VERSION-linux-installer.pl"
-
-  # Download the unix installer
-  echo "Downloading Installer from $INSTALLER_FILE"
-  curl -sS -L -O "$INSTALLER_FILE"
-  perl glpi-agent-"$LATEST_GA_VERSION"-linux-installer.pl --reinstall --no-question --silent --type="$ga_available_tasks" --runnow "$@"
-
   # Command to get the currently installed GLPI agent version, adjust it based on your output format
   GA_VERSION=$(glpi-agent --version)
   INSTALLED_GA_LINUX_VERSION=$(echo "$GA_VERSION" | grep -oP 'GLPI Agent \(\K[0-9.-]+')
@@ -114,24 +120,53 @@ if [[ "$INSTALLED_GA_VERSION" != "$LATEST_GA_VERSION" ]]; then
 
   # Compare the versions
   if [[ "$INSTALLED_GA_VERSION" != "$LATEST_GA_VERSION" ]]; then
-    echo "Error. Agent not updated!"
-    exit
+    echo "Update needed: Installed GLPI agent version $INSTALLED_GA_VERSION is different from the latest version $LATEST_GA_VERSION."
+  
+    # Save current config
+    GA_CONFIG="/etc/glpi-agent/conf.d"
+      if [ -d "$GA_CONFIG" ]; then
+        cp $GA_CONFIG/*.cfg .
+      else
+        echo "No configuration is found. Cannot update the agent."
+        exit
+      fi
+
+    # Save current installed packages
+    GA_INSTALLED_TASKS=$(sudo glpi-agent --list-tasks) > /dev/null
+    GA_AVAILABLE_TASKS=$(echo "$GA_INSTALLED_TASKS" | grep -oE '^[[:space:]]*-[[:space:]]+[^(]+' | awk -F ' ' '{print $2}' | paste -sd "," -)
+
+    echo "Installed tasks: $GA_AVAILABLE_TASKS"
+
+    # Command to get the currently installed GLPI agent version, adjust it based on your output format
+    GA_VERSION=$(glpi-agent --version)
+    INSTALLED_GA_LINUX_VERSION=$(echo "$GA_VERSION" | grep -oP 'GLPI Agent \(\K[0-9.-]+')
+    INSTALLED_GA_VERSION=$(echo "$INSTALLED_GA_LINUX_VERSION" | cut -d'-' -f1)
+
+    # Update option. Reinstall on steroids
+    perl glpi-agent-"$LATEST_GA_VERSION"-linux-installer.pl --reinstall --no-question --silent --type="$GA_AVAILABLE_TASKS" "${EXTRA_OPTIONS[@]}"
+
+    # Recover config
+    cp $TEMP_DIR/*.cfg $GA_CONFIG
+
+    # Compare versions after installation
+    if [[ "$INSTALLED_GA_VERSION" != "$LATEST_GA_VERSION" ]]; then
+      echo "Error. Agent not updated!"
+      exit
+    fi
+
+    # Execute agent
+    glpi-agent
+
+    # Clean up: delete the downloaded files and generated agent
+    echo "Cleaning up..."
+    rm -rf $TEMP_DIR 
+
+    # Change back to the previous directory
+    echo "New GLPI agent version $INSTALLED_GA_VERSION successfully updated."
+    cd - || exit
+  
+  else
+    echo "No update needed: Installed GLPI agent version $INSTALLED_GA_VERSION is up to date."
   fi
-
-  # Recover config
-  cp $TEMP_DIR/*.cfg $GA_CONFIG
-
-  # Execute agent 
-  glpi-agent
-  
-  # Clean up: delete the downloaded files and generated agent
-  echo "Cleaning up..."
-  rm -rf $TEMP_DIR 
-
-  # Change back to the previous directory
-  echo "New GLPI agent version $INSTALLED_GA_VERSION successfully updated."
-  cd - || exit
-  
-else
-  echo "No update needed: Installed GLPI agent version $INSTALLED_GA_VERSION is up to date."
 fi
+exit 0
