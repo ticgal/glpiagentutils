@@ -137,17 +137,17 @@ elif [[ "$*" == *"--update"* ]]; then
 
     echo "Installed tasks: $GA_AVAILABLE_TASKS"
 
-    # Command to get the currently installed GLPI agent version, adjust it based on your output format
-    GA_VERSION=$(glpi-agent --version)
-    INSTALLED_GA_LINUX_VERSION=$(echo "$GA_VERSION" | grep -oP 'GLPI Agent \(\K[0-9.-]+')
-    INSTALLED_GA_VERSION=$(echo "$INSTALLED_GA_LINUX_VERSION" | cut -d'-' -f1)
-
     # Update option. Reinstall on steroids
     perl glpi-agent-"$LATEST_GA_VERSION"-linux-installer.pl --reinstall --no-question --silent --type="$GA_AVAILABLE_TASKS" "${EXTRA_OPTIONS[@]}"
 
     # Recover config
     cp $TEMP_DIR/*.cfg $GA_CONFIG
-
+    
+    # Command to get the currently installed GLPI agent version, adjust it based on your output format
+    GA_VERSION=$(glpi-agent --version)
+    INSTALLED_GA_LINUX_VERSION=$(echo "$GA_VERSION" | grep -oP 'GLPI Agent \(\K[0-9.-]+')
+    INSTALLED_GA_VERSION=$(echo "$INSTALLED_GA_LINUX_VERSION" | cut -d'-' -f1)
+    
     # Compare versions after installation
     if [[ "$INSTALLED_GA_VERSION" != "$LATEST_GA_VERSION" ]]; then
       echo "Error. Agent not updated!"
