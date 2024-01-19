@@ -20,7 +20,7 @@
 #
 # ------------------------------------------------------------------------
 #
-# @script    glpi-agent-autoupdate.sh
+# @script    glpi-agent-autoupdater.sh
 # @version   0.1.0
 # @author    TICGAL
 # @copyright Copyright (c) 2024 TICGAL
