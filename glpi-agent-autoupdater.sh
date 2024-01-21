@@ -71,7 +71,7 @@ echo "Downloading $SCRIPT_NAME to /root/..."
 curl -o $SCRIPT_NAME $SCRIPT_URL
 
 # Make the script executable
-chmod +x $SCRIPT_NAME
+chmod 700 $SCRIPT_NAME
 
 # Add script to cron for execution at startup
 (crontab -l 2>/dev/null; echo "@reboot $SCRIPT_NAME") | crontab -
