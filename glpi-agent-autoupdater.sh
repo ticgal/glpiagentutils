@@ -21,7 +21,7 @@
 # ------------------------------------------------------------------------
 #
 # @script    glpi-agent-autoupdater.sh
-# @version   0.1.0
+# @version   0.2.0
 # @author    TICGAL
 # @copyright Copyright (c) 2024 TICGAL
 # @license   AGPL License 3.0 or any later version
