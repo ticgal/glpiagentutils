@@ -33,6 +33,7 @@
 # Define the URL and the download location of the script
 SCRIPT_URL="https://raw.githubusercontent.com/ticgal/glpiagentutils/main/glpi-agent-wrapper.sh"
 SCRIPT_NAME="/root/glpi-agent-wrapper.sh"
+SERVICE_NAME="glpi-agent-wrapper.service"
 
 # Function to check and install required commands
 ensure_command() {
