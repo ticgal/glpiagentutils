@@ -16,14 +16,14 @@
 # GNU Affero General Public License for more details.
 #
 # You should have received a copy of the GNU Affero General Public License
-# along with Notifications plugin. If not, see <http://www.gnu.org/licenses/>.
+# along with glpiagentutils. If not, see <http://www.gnu.org/licenses/>.
 #
 # ------------------------------------------------------------------------
 #
 # @script    glpi-agent-wrapper.sh
-# @version   0.3.0
+# @version   0.3.2
 # @author    TICGAL
-# @copyright Copyright (c) 2023 TICGAL
+# @copyright Copyright (c) 2023-2024 TICGAL
 # @license   AGPL License 3.0 or any later version
 #            http://www.gnu.org/licenses/agpl-3.0-standalone.html
 # @link      https://github.com/ticgal/glpiagentutils
@@ -137,25 +137,25 @@ elif [[ "$*" == *"--update"* ]]; then
 
     echo "Installed tasks: $GA_AVAILABLE_TASKS"
 
-    # Command to get the currently installed GLPI agent version, adjust it based on your output format
-    GA_VERSION=$(glpi-agent --version)
-    INSTALLED_GA_LINUX_VERSION=$(echo "$GA_VERSION" | grep -oP 'GLPI Agent \(\K[0-9.-]+')
-    INSTALLED_GA_VERSION=$(echo "$INSTALLED_GA_LINUX_VERSION" | cut -d'-' -f1)
-
     # Update option. Reinstall on steroids
     perl glpi-agent-"$LATEST_GA_VERSION"-linux-installer.pl --reinstall --no-question --silent --type="$GA_AVAILABLE_TASKS" "${EXTRA_OPTIONS[@]}"
 
     # Recover config
     cp $TEMP_DIR/*.cfg $GA_CONFIG
-
+    
+    # Command to get the currently installed GLPI agent version, adjust it based on your output format
+    GA_VERSION=$(glpi-agent --version)
+    INSTALLED_GA_LINUX_VERSION=$(echo "$GA_VERSION" | grep -oP 'GLPI Agent \(\K[0-9.-]+')
+    INSTALLED_GA_VERSION=$(echo "$INSTALLED_GA_LINUX_VERSION" | cut -d'-' -f1)
+    
     # Compare versions after installation
     if [[ "$INSTALLED_GA_VERSION" != "$LATEST_GA_VERSION" ]]; then
       echo "Error. Agent not updated!"
       exit
+    else
+        # Execute agent if there's a new version
+        glpi-agent
     fi
-
-    # Execute agent
-    glpi-agent
 
     # Clean up: delete the downloaded files and generated agent
     echo "Cleaning up..."

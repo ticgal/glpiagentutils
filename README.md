@@ -14,6 +14,7 @@ GLPI-Agent-Utils aims to be a toolkit to complement GLPI Agent. It's a set of sc
 Currently, these are the scripts:
 - [glpi-agent-portable-inventory.sh](#glpi-agent-portable-inventory.sh)
 - [glpi-agent-wrapper.sh](#glpi-agent-wrapper.sh)
+- [glpi-agent-autoupdater.sh](#glpi-agent-autoupdater.sh)
 ## What is the GLPI Agent?
 
 For more information about the GLPI Agent, please visit this [link](https://github.com/glpi-project/glpi-agent#readme).
@@ -102,6 +103,22 @@ A convenient one-liner:
 
 #### --help
 Self-explanatory :)
+
+### [glpi-agent-autoupdater.sh](#glpi-agent-autoupdater.sh)
+A deployable script to automate the creation of a service to update glpi-agent at computer startup
+It relies on the `glpi-agent-wrapper.sh` to perform the update.
+
+#### Supported OS
+
+**`glpi-agent-autoupdater.sh`** should work with any operating system supported by the official `glpi-agent-linux-installer.pl` using **systemd**
+
+It has been tested on:
+- Ubuntu
+
+
+#### How to use it
+Just download and run
+It was created to be distributed using GLPI Agent Deploy tasks ;)
 
 # Contribute
 PR, suggestions, or improvements are always welcome. Open an Issue and send a PR to be reviewed.
