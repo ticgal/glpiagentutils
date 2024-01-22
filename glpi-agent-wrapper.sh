@@ -152,10 +152,10 @@ elif [[ "$*" == *"--update"* ]]; then
     if [[ "$INSTALLED_GA_VERSION" != "$LATEST_GA_VERSION" ]]; then
       echo "Error. Agent not updated!"
       exit
+    else
+        # Execute agent if there's a new version
+        glpi-agent
     fi
-
-    # Execute agent
-    glpi-agent
 
     # Clean up: delete the downloaded files and generated agent
     echo "Cleaning up..."
