@@ -83,7 +83,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=$SCRIPT_NAME
+ExecStart=$SCRIPT_NAME --update
 Restart=on-failure
 
 [Install]
