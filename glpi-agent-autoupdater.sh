@@ -73,7 +73,29 @@ curl -o $SCRIPT_NAME $SCRIPT_URL
 # Make the script executable
 chmod 700 $SCRIPT_NAME
 
-# Add script to cron for execution at startup
-(crontab -l 2>/dev/null; echo "@reboot $SCRIPT_NAME") | crontab -
+# Create systemd service file
+echo "Creating $SERVICE_NAME in /etc/systemd/system/"
+cat <<EOF > /etc/systemd/system/$SERVICE_NAME
+[Unit]
+Description=GLPI Agent Wrapper Service
+After=network.target
 
-echo "Script $SCRIPT_NAME has been set up to run at startup."
+[Service]
+Type=simple
+ExecStart=$SCRIPT_NAME
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+# Reload systemd to apply new service
+systemctl daemon-reload
+
+# Enable the service
+systemctl enable $SERVICE_NAME
+
+# Start the service
+systemctl start $SERVICE_NAME
+
+echo "Service $SERVICE_NAME has been created, enabled to run at startup and started."
