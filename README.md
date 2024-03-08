@@ -98,7 +98,8 @@ Running the agent with the `--update´ parameter will:
 - Retrieve previous settings
 - Run the agent
 
-A convenient one-liner:
+Another convenient one-liner:
+
 `curl -s https://raw.githubusercontent.com/ticgal/glpiagentutils/master/glpi-agent-wrapper.sh | sudo bash /dev/stdin --update`
 
 #### --help
