@@ -1,7 +1,7 @@
 # GLPI Agent Utils
 
-[![Twitter](https://img.shields.io/badge/Twitter-TICgal-blue.svg?style=flat-square)](https://twitter.com/ticgalcom)
-[![Web](https://img.shields.io/badge/Web-TICgal-blue.svg?style=flat-square)](https://tic.gal/)
+[![Twitter](https://img.shields.io/badge/Twitter-TICGAL-blue.svg?style=flat-square)](https://twitter.com/ticgalcom)
+[![Web](https://img.shields.io/badge/Web-TICGAL-blue.svg?style=flat-square)](https://tic.gal/)
 [![License](https://img.shields.io/badge/License-GNU%20AGPLv3-blue.svg)](https://github.com/ticgal/taskdrop/blob/master/LICENSE)
 
 ## Disclaimer
